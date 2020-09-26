@@ -1,0 +1,68 @@
+resources:
+
+  - resource: messageBusGroup
+    targets:
+      - target: ['consumption', 'ise']
+        templates:
+          - messageBusAzureResourceGroup
+          - deployMessageBusGroup
+
+  - resource: artifactStore
+    targets:
+      - target: ['consumption', 'ise']
+        templates:
+          - artifactStoreAzureIntegrationAccountBasic
+          - deployArtifactStore
+
+  - resource: routingManager
+    targets:
+      - target: ['consumption', 'ise']
+        templates:
+          - routingManagerAzureApiManagementConsumption
+          - deployRoutingManager
+
+  - resource: routingSlipRouter
+    targets:
+      - target: ['consumption', 'ise']
+        templates:
+          - routingSlipRouterAzureLogicAppConsumption
+          - deployRoutingSlipRouter
+
+  - resource: routingStore
+    targets:
+      - target: ['consumption', 'ise']
+        templates:
+          - routingStoreAzureAppConfiguration
+          - deployRoutingStore
+
+  - resource: applicationGroup
+    targets:
+      - target: ['consumption', 'ise']
+        templates:
+          - messageApplicationResourceGroup
+          - deployApplicationGroup
+
+  - resource: applicationMessage
+    targets:
+      - target: ['consumption', 'ise']
+        templates:
+          - deploySchema
+
+  - resource: processManager
+    targets:
+      - target: ['consumption', 'ise']
+        templates:
+          - processManagerLogicApp
+          - deployProcessManager
+        snippets:
+          - workflow
+          - parameterApimSubscriptionKey
+          - parameterScenarioStep
+          - channelHttpTrigger
+          - variableCheckpoint
+          - variableConfiguration
+          - activityContainerGetConfiguration
+          - activityContainerCallRoutingSlipRouter
+          - activityContainerPlaceHolder
+          - activityPlaceHolder
+          - activityInvokeWorkflow

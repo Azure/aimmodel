@@ -1,0 +1,74 @@
+# Builds and tests the code.
+# Additionally, for pushes to main and GitHub releases the NuGet packages are published.
+# The version number is always read from version-number.txt and the suffix from version-suffix.txt.
+# If the workflow has not been triggered by a GitHub release, then a suffix is applied to the version number indicating it's a pre-release.
+
+name: CI Build
+on:
+  push:
+    branches:
+      - 'main'
+  pull_request:
+    branches:
+      - 'main'
+  release:
+    types: [created]
+
+env:
+  DOTNET_VERSION: '3.1.200'
+  OUTPUT_DIR: 'dist'
+  BUILD_TYPE: 'Release'
+  NUGET_SOURCE_NAME: 'AzureIntegrationMigration'
+  CODE_COVERAGE_THRESHOLD: 90
+  VERSION_NUMBER : 'NOT SET'
+  VERSION_NUMBER_SUFFIX : ''
+
+jobs:
+  build-and-test:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repo into workspace
+        uses: actions/checkout@v2
+      
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+      
+      # The version number suffix is set to indicate its a pre-release for all builds unless the build is run as result of a github release being created.
+      - name: Set the version number suffix if the workflow trigger is not a release
+        if: github.event_name != 'release'
+        shell: bash
+        run: |
+          seconds_at_midnight=$(date --utc -d 'today 00:00:00' +"%s")
+          seconds_now=$(date --utc +"%s")
+          seconds_since_midnight=$((seconds_now - seconds_at_midnight))
+          seconds_since_midnight_padded=`printf %05d $seconds_since_midnight`
+          echo ::set-env name=VERSION_NUMBER_SUFFIX::-$(cat ./version-suffix.txt).$(date --utc +%Y%m%d$seconds_since_midnight_padded)
+
+      # Set the version number.
+      - name: Set the version number
+        shell: bash
+        run: echo ::set-env name=VERSION_NUMBER::$(cat ./version-number.txt)${{ env.VERSION_NUMBER_SUFFIX }}
+        
+      - name: Update the nuget config with the build credentials for the private source
+        run: dotnet nuget update source ${{ env.NUGET_SOURCE_NAME }} --username ${{ secrets.NUGET_PACKAGE_REPO_API_USER }} --password ${{ secrets.NUGET_PACKAGE_REPO_API_SECRET }}
+
+      - name: Restore project dependencies
+        run: dotnet restore
+
+      - name: Build solution
+        run: dotnet build --configuration ${{ env.BUILD_TYPE }} -p:Version=${{ env.VERSION_NUMBER }}
+
+      - name: Run unit tests with coverage
+        run: dotnet test --filter Category=Unit -p:CollectCoverage=true -p:CoverletOutput=../../${{ env.OUTPUT_DIR }}/tests/coverage/ -p:CoverletOutputFormat=cobertura -p:Threshold=${{ env.CODE_COVERAGE_THRESHOLD }} -p:ExcludeByAttribute=CompilerGeneratedAttribute -p:ExcludeByAttribute=GeneratedCodeAttribute
+
+      - name: Pack the code into a NuGet package
+        run: dotnet pack --configuration ${{ env.BUILD_TYPE }} -o ${{ env.OUTPUT_DIR }} -p:Version=${{ env.VERSION_NUMBER }} --no-build
+
+      # Publish the packge to GitHub package repository using the GPR tool as this is more stable than dotnet nuget push.
+      - name: Publish the package to GitHub package repository
+        if: github.event_name == 'release' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+        run: |
+          dotnet tool update gpr -g
+          gpr push .\${{ env.OUTPUT_DIR }}\*.nupkg --api-key ${{ secrets.NUGET_PACKAGE_REPO_API_SECRET }}

@@ -1,0 +1,192 @@
+#
+# Snippets are groups of files keyed with a snippet name.
+#
+# Each snippet file is further keyed by the target deployment
+# environment to allow for different snippets where target environments might
+# require a different shape or settings for the deployment of the generated resource.
+#
+# The snippet files are text files of any format, but can use the Liquid template
+# language during rendering that can use the target model to provide dynamic values
+# to the template.
+#
+# For Liquid information, see:
+# https://shopify.github.io/liquid/
+# https://www.shopify.co.uk/partners/shopify-cheat-sheet 
+#
+# The configuration files themselves can also be rendered using the Liquid template language.
+#
+# Resource types define the type of the content of the snippet, for example, in a workflow
+# snippet, it could represent a workflow variable or a workflow activity.  The resource type
+# is used to determine how to map from an arbitrary object in the target model to snippet resources.
+#
+# Workflow Snippets:
+#
+# Snippets are primarily used to generate custom workflow definitions, as such, all workflow snippet
+# resource types start with: microsoft.workflow.
+#
+# This is followed by the type of the workflow object that the snippet represents:
+#
+# - workflow: represents the definition and is the entry point boilerplate for the workflow.
+# - parameter: represents a parameter for a workflow, such as used in Logic Apps.
+# - channel: represents a workflow channel for messages in/out of the workflow.
+# - variable: represents a workflow variable that is initialized during the workflow.
+# - message: represents a workflow message that is received/sent by a workflow.
+# - activitycontainer: represents a workflow activity that is a group of other activities.
+# - activity: represents a workflow activity that performs an action.
+# - action: represents a pre-built boilerplate actions, such as calling a routing slip router.
+#
+# There are some pre-built workflow activities to perform specific functions, such as
+# getconfiguration or callroutingsliprouter.  These are boilerplate drop-ins to a workflow.
+#
+
+# A resource snippet provides a set of files that are rendered as part of the
+# Convert stage of the AIM tool.
+resourceSnippets:
+
+  # Workflow Definition
+  - snippet: workflow
+    snippetType: microsoft.snippet.json
+    resourceName: workflow-{{ model.migration_target.deployment_environment | downcase }}
+    resourceType: microsoft.workflows.azurelogicapp.definition
+    parameters:
+      - azure_primary_region: {{ model.migration_target.azure_primary_region }}
+      - azure_secondary_region: {{ model.migration_target.azure_secondary_region }}
+      - azure_subscription_id: {{ model.migration_target.azure_subscription_id }}
+    outputPath: ../dist/snippetFiles
+    files:
+      - env: ['dev']
+        path: <path-to-snippet>
+
+  # Workflow Parameters
+  - snippet: parameterApimSubscriptionKey
+    snippetType: microsoft.snippet.json
+    resourceName: workflow-parameter-apimsubscriptionkey-{{ model.migration_target.deployment_environment | downcase }}
+    resourceType: microsoft.workflows.azurelogicapp.parameter
+    parameters:
+      - azure_primary_region: {{ model.migration_target.azure_primary_region }}
+      - azure_secondary_region: {{ model.migration_target.azure_secondary_region }}
+      - azure_subscription_id: {{ model.migration_target.azure_subscription_id }}
+    outputPath: ../dist/snippetFiles
+    files:
+      - env: ['dev']
+        path: <path-to-snippet>
+
+  - snippet: parameterScenarioStep
+    snippetType: microsoft.snippet.json
+    resourceName: workflow-parameter-scenariostep-{{ model.migration_target.deployment_environment | downcase }}
+    resourceType: microsoft.workflows.azurelogicapp.parameter
+    parameters:
+      - azure_primary_region: {{ model.migration_target.azure_primary_region }}
+      - azure_secondary_region: {{ model.migration_target.azure_secondary_region }}
+      - azure_subscription_id: {{ model.migration_target.azure_subscription_id }}
+    outputPath: ../dist/snippetFiles
+    files:
+      - env: ['dev']
+        path: <path-to-snippet>
+
+  # Workflow Channels
+  - snippet: channelHttpTrigger
+    snippetType: microsoft.snippet.json
+    resourceName: workflow-channel-httptrigger-{{ model.migration_target.deployment_environment | downcase }}
+    resourceType: microsoft.workflows.azurelogicapp.channel
+    parameters:
+      - azure_primary_region: {{ model.migration_target.azure_primary_region }}
+      - azure_secondary_region: {{ model.migration_target.azure_secondary_region }}
+      - azure_subscription_id: {{ model.migration_target.azure_subscription_id }}
+    outputPath: ../dist/snippetFiles
+    files:
+      - env: ['dev']
+        path: <path-to-snippet>
+
+  # Workflow Variables
+  - snippet: variableCheckpoint
+    snippetType: microsoft.snippet.json
+    resourceName: workflow-variable-checkpoint-{{ model.migration_target.deployment_environment | downcase }}
+    resourceType: microsoft.workflows.azurelogicapp.variable
+    parameters:
+      - azure_primary_region: {{ model.migration_target.azure_primary_region }}
+      - azure_secondary_region: {{ model.migration_target.azure_secondary_region }}
+      - azure_subscription_id: {{ model.migration_target.azure_subscription_id }}
+    outputPath: ../dist/snippetFiles
+    files:
+      - env: ['dev']
+        path: <path-to-snippet>
+
+  - snippet: variableConfiguration
+    snippetType: microsoft.snippet.json
+    resourceName: workflow-variable-configuration-{{ model.migration_target.deployment_environment | downcase }}
+    resourceType: microsoft.workflows.azurelogicapp.variable
+    parameters:
+      - azure_primary_region: {{ model.migration_target.azure_primary_region }}
+      - azure_secondary_region: {{ model.migration_target.azure_secondary_region }}
+      - azure_subscription_id: {{ model.migration_target.azure_subscription_id }}
+    outputPath: ../dist/snippetFiles
+    files:
+      - env: ['dev']
+        path: <path-to-snippet>
+
+  # Workflow Activities
+  - snippet: activityContainerGetConfiguration
+    snippetType: microsoft.snippet.json
+    resourceName: workflow-activity-container-getconfiguration-{{ model.migration_target.deployment_environment | downcase }}
+    resourceType: microsoft.workflows.azurelogicapp.action.getconfiguration
+    parameters:
+      - azure_primary_region: {{ model.migration_target.azure_primary_region }}
+      - azure_secondary_region: {{ model.migration_target.azure_secondary_region }}
+      - azure_subscription_id: {{ model.migration_target.azure_subscription_id }}
+    outputPath: ../dist/snippetFiles
+    files:
+      - env: ['dev']
+        path: <path-to-snippet>
+
+  - snippet: activityContainerCallRoutingSlipRouter
+    snippetType: microsoft.snippet.json
+    resourceName: workflow-activity-container-callroutingsliprouter-{{ model.migration_target.deployment_environment | downcase }}
+    resourceType: microsoft.workflows.azurelogicapp.action.callroutingsliprouter
+    parameters:
+      - azure_primary_region: {{ model.migration_target.azure_primary_region }}
+      - azure_secondary_region: {{ model.migration_target.azure_secondary_region }}
+      - azure_subscription_id: {{ model.migration_target.azure_subscription_id }}
+    outputPath: ../dist/snippetFiles
+    files:
+      - env: ['dev']
+        path: <path-to-snippet>
+
+  - snippet: activityContainerPlaceHolder
+    snippetType: microsoft.snippet.json
+    resourceName: workflow-activity-container-placeholder-{{ model.migration_target.deployment_environment | downcase }}
+    resourceType: microsoft.workflows.azurelogicapp.activitycontainer.placeholder
+    parameters:
+      - azure_primary_region: {{ model.migration_target.azure_primary_region }}
+      - azure_secondary_region: {{ model.migration_target.azure_secondary_region }}
+      - azure_subscription_id: {{ model.migration_target.azure_subscription_id }}
+    outputPath: ../dist/snippetFiles
+    files:
+      - env: ['dev']
+        path: <path-to-snippet>
+
+  - snippet: activityPlaceHolder
+    snippetType: microsoft.snippet.json
+    resourceName: workflow-activity-placeholder-{{ model.migration_target.deployment_environment | downcase }}
+    resourceType: microsoft.workflows.azurelogicapp.activity.placeholder
+    parameters:
+      - azure_primary_region: {{ model.migration_target.azure_primary_region }}
+      - azure_secondary_region: {{ model.migration_target.azure_secondary_region }}
+      - azure_subscription_id: {{ model.migration_target.azure_subscription_id }}
+    outputPath: ../dist/snippetFiles
+    files:
+      - env: ['dev']
+        path: <path-to-snippet>
+
+  - snippet: activityInvokeWorkflow
+    snippetType: microsoft.snippet.json
+    resourceName: workflow-activity-placeholder-{{ model.migration_target.deployment_environment | downcase }}
+    resourceType: microsoft.workflows.azurelogicapp.activity.invokeworkflow
+    parameters:
+      - azure_primary_region: {{ model.migration_target.azure_primary_region }}
+      - azure_secondary_region: {{ model.migration_target.azure_secondary_region }}
+      - azure_subscription_id: {{ model.migration_target.azure_subscription_id }}
+    outputPath: ../dist/snippetFiles
+    files:
+      - env: ['dev']
+        path: <path-to-snippet>

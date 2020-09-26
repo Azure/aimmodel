@@ -1,0 +1,183 @@
+resourceTemplates:
+
+  # Groups
+  - template: messageBusAzureResourceGroup
+    templateType: microsoft.template.arm
+    resourceName: rg-aimmsgbus-{{ model.migration_target.deployment_environment | downcase }}
+    resourceType: microsoft.groups.azureresourcegroup
+    tags:
+      - ApplicationName: AIM-MessageBus
+      - Env: {{ model.migration_target.deployment_environment | downcase }}
+    parameters:
+      - azure_primary_region: {{ model.migration_target.azure_primary_region }}
+      - azure_secondary_region: {{ model.migration_target.azure_secondary_region }}
+      - azure_subscription_id: {{ model.migration_target.azure_subscription_id }}
+    outputPath: ../dist/generatedfiles
+    files:
+      - env: ['dev']
+        paths:
+          - <path-to-dev-arm-template-resource-group>
+          - <path-to-dev-arm-parameter-file>
+
+  # Stores
+  - template: routingStoreAzureAppConfiguration
+    templateType: microsoft.template.arm
+    resourceName: appcfg-aimroutingstore-{{ model.migration_target.deployment_environment | downcase }}
+    resourceType: microsoft.stores.azureappconfiguration
+    tags:
+      - ApplicationName: AIM-MessageBus
+      - Env: {{ model.migration_target.deployment_environment | downcase }}
+    parameters:
+      - azure_primary_region: {{ model.migration_target.azure_primary_region }}
+      - azure_secondary_region: {{ model.migration_target.azure_secondary_region }}
+      - azure_subscription_id: {{ model.migration_target.azure_subscription_id }}
+    outputPath: ../dist/generatedfiles
+    files:
+      - env: ['dev']
+        paths:
+          - <path-to-dev-arm-template-app-configuration>
+          - <path-to-dev-arm-parameter-file-app-configuration>
+          - <path-to-dev-arm-template-key-vault>
+          - <path-to-dev-arm-parameter-file-key-vault>
+
+  - template: artifactStoreAzureIntegrationAccountBasic
+    templateType: microsoft.template.arm
+    resourceName: intacc-aimartifactstore-{{ model.migration_target.deployment_environment | downcase }}
+    resourceType: microsoft.stores.azureintegrationaccount
+    tags:
+      - ApplicationName: AIM-MessageBus
+      - Env: {{ model.migration_target.deployment_environment | downcase }}
+    parameters:
+      - azure_primary_region: {{ model.migration_target.azure_primary_region }}
+      - azure_secondary_region: {{ model.migration_target.azure_secondary_region }}
+      - azure_subscription_id: {{ model.migration_target.azure_subscription_id }}
+    outputPath: ../dist/generatedfiles
+    files:
+      - env: ['dev']
+        paths:
+          - <path-to-dev-arm-template>
+          - <path-to-dev-arm-parameter-file>
+
+  # Services
+  - template: routingManagerAzureApiManagementConsumption
+    templateType: microsoft.template.arm
+    resourceName: apim-aimroutingmgr-{{ model.migration_target.deployment_environment | downcase }}
+    resourceType: microsoft.services.azureapimanagement
+    tags:
+      - ApplicationName: AIM-MessageBus
+      - Env: {{ model.migration_target.deployment_environment | downcase }}
+    parameters:
+      - azure_primary_region: {{ model.migration_target.azure_primary_region }}
+      - azure_secondary_region: {{ model.migration_target.azure_secondary_region }}
+      - azure_subscription_id: {{ model.migration_target.azure_subscription_id }}
+    outputPath: ../dist/generatedfiles
+    files:
+      - env: ['dev']
+        paths:
+          - <path-to-dev-arm-template>
+          - <path-to-dev-arm-parameter-file>
+  
+  # Workflows
+  - template: routingSlipRouterAzureLogicAppConsumption
+    templateType: microsoft.template.arm
+    resourceName: logic-aimrsr-{{ model.migration_target.deployment_environment | downcase }}
+    resourceType: microsoft.workflows.azurelogicapp
+    tags:
+      - ApplicationName: AIM-MessageBus
+      - Env: {{ model.migration_target.deployment_environment | downcase }}
+    parameters:
+      - azure_primary_region: {{ model.migration_target.azure_primary_region }}
+      - azure_secondary_region: {{ model.migration_target.azure_secondary_region }}
+      - azure_subscription_id: {{ model.migration_target.azure_subscription_id }}
+    outputPath: ../dist/generatedfiles
+    files:
+      - env: ['dev']
+        paths:
+          - <path-to-dev-arm-template>
+          - <path-to-dev-arm-parameter-file>
+
+  # Scripts
+  - template: deployMessageBusGroup
+    templateType: microsoft.template.powershell
+    resourceName: script-deployarm
+    resourceType: microsoft.scripts.powershell
+    parameters:
+      - azure_primary_region: {{ model.migration_target.azure_primary_region }}
+      - azure_secondary_region: {{ model.migration_target.azure_secondary_region }}
+      - azure_subscription_id: {{ model.migration_target.azure_subscription_id }}
+    outputPath: ../dist/generatedfiles
+    files:
+      - env: ['dev']
+        paths:
+          - <path-to-dev-powershell-script-to-deploy>
+          - <path-to-dev-powershell-invoker-to-deploy>
+          - <path-to-dev-powershell-script-to-teardown>
+          - <path-to-dev-powershell-invoker-to-teardown>
+
+  - template: deployRoutingStore
+    templateType: microsoft.template.powershell
+    resourceName: script-deployarm
+    resourceType: microsoft.scripts.powershell
+    parameters:
+      - azure_primary_region: {{ model.migration_target.azure_primary_region }}
+      - azure_secondary_region: {{ model.migration_target.azure_secondary_region }}
+      - azure_subscription_id: {{ model.migration_target.azure_subscription_id }}
+    outputPath: ../dist/generatedfiles
+    files:
+      - env: ['dev']
+        paths:
+          - <path-to-dev-powershell-script-to-deploy>
+          - <path-to-dev-powershell-invoker-to-deploy>
+          - <path-to-dev-powershell-script-to-teardown>
+          - <path-to-dev-powershell-invoker-to-teardown>
+
+  - template: deployArtifactStore
+    templateType: microsoft.template.powershell
+    resourceName: script-deployarm
+    resourceType: microsoft.scripts.powershell
+    parameters:
+      - azure_primary_region: {{ model.migration_target.azure_primary_region }}
+      - azure_secondary_region: {{ model.migration_target.azure_secondary_region }}
+      - azure_subscription_id: {{ model.migration_target.azure_subscription_id }}
+    outputPath: ../dist/generatedfiles
+    files:
+      - env: ['dev']
+        paths:
+          - <path-to-dev-powershell-script-to-deploy>
+          - <path-to-dev-powershell-invoker-to-deploy>
+          - <path-to-dev-powershell-script-to-teardown>
+          - <path-to-dev-powershell-invoker-to-teardown>
+
+  - template: deployRoutingManager
+    templateType: microsoft.template.powershell
+    resourceName: script-deployarm
+    resourceType: microsoft.scripts.powershell
+    parameters:
+      - azure_primary_region: {{ model.migration_target.azure_primary_region }}
+      - azure_secondary_region: {{ model.migration_target.azure_secondary_region }}
+      - azure_subscription_id: {{ model.migration_target.azure_subscription_id }}
+    outputPath: ../dist/generatedfiles
+    files:
+      - env: ['dev']
+        paths:
+          - <path-to-dev-powershell-script-to-deploy>
+          - <path-to-dev-powershell-invoker-to-deploy>
+          - <path-to-dev-powershell-script-to-teardown>
+          - <path-to-dev-powershell-invoker-to-teardown>
+
+  - template: deployRoutingSlipRouter
+    templateType: microsoft.template.powershell
+    resourceName: script-deployarm
+    resourceType: microsoft.scripts.powershell
+    parameters:
+      - azure_primary_region: {{ model.migration_target.azure_primary_region }}
+      - azure_secondary_region: {{ model.migration_target.azure_secondary_region }}
+      - azure_subscription_id: {{ model.migration_target.azure_subscription_id }}
+    outputPath: ../dist/generatedfiles
+    files:
+      - env: ['dev']
+        paths:
+          - <path-to-dev-powershell-script-to-deploy>
+          - <path-to-dev-powershell-invoker-to-deploy>
+          - <path-to-dev-powershell-script-to-teardown>
+          - <path-to-dev-powershell-invoker-to-teardown>

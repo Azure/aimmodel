@@ -1,0 +1,115 @@
+#
+# Templates are groups of files keyed with a template name.
+#
+# Each template file in a template is further keyed by the target deployment
+# environment to allow for different templates where target environments might
+# require a different shape or settings for the deployment of the resource.
+#
+# Templates also have different types such as Azure Resource Manager templates
+# and parameter files or can be PowerShell script files.
+#
+# The templates files are text files of any format, but can use the Liquid template
+# language during rendering that can use the target model to provide dynamic values
+# to the template.
+#
+# For Liquid information, see:
+# https://shopify.github.io/liquid/
+# https://www.shopify.co.uk/partners/shopify-cheat-sheet 
+#
+# The configuration files themselves can also be rendered using the Liquid template language.
+#
+# Resource names and tags are taken from the best practice guidance of the Cloud Adoption Framework:
+# https://docs.microsoft.com/en-us/azure/cloud-adoption-framework/ready/azure-best-practices/naming-and-tagging
+#
+
+# A resource template provides a set of files that are rendered as part of the
+# Convert stage of the AIM tool.
+resourceTemplates:
+
+  # Groups
+  - template: applicationAzureResourceGroup
+    templateType: microsoft.template.arm
+    resourceName: rg-aimmsgbus-{{ model.migration_target.deployment_environment | downcase }}
+    resourceType: microsoft.groups.azureresourcegroup
+    tags:
+      - Env: {{ model.migration_target.deployment_environment | downcase }}
+    parameters:
+      - azure_primary_region: {{ model.migration_target.azure_primary_region }}
+      - azure_secondary_region: {{ model.migration_target.azure_secondary_region }}
+      - azure_subscription_id: {{ model.migration_target.azure_subscription_id }}
+    outputPath: ../dist/generatedfiles
+    files:
+      - env: ['dev']
+        paths:
+          - <path-to-dev-arm-template-resource-group>
+          - <path-to-dev-arm-parameter-file>
+
+  # Workflows
+  - template: processManagerLogicApp
+    templateType: microsoft.template.arm
+    resourceName: logic-processmanager-{{ model.migration_target.deployment_environment | downcase }}
+    resourceType: microsoft.workflows.azurelogicapp
+    tags:
+      - Env: {{ model.migration_target.deployment_environment | downcase }}
+    parameters:
+      - azure_primary_region: {{ model.migration_target.azure_primary_region }}
+      - azure_secondary_region: {{ model.migration_target.azure_secondary_region }}
+      - azure_subscription_id: {{ model.migration_target.azure_subscription_id }}
+    outputPath: ../dist/generatedfiles
+    files:
+      - env: ['dev']
+        paths:
+          - <path-to-dev-arm-template-logic-app>
+          - <path-to-dev-arm-parameter-file>
+
+  # Scripts
+  - template: deployApplicationGroup
+    templateType: microsoft.template.powershell
+    resourceName: script-deployarm
+    resourceType: microsoft.scripts.powershell
+    parameters:
+      - azure_primary_region: {{ model.migration_target.azure_primary_region }}
+      - azure_secondary_region: {{ model.migration_target.azure_secondary_region }}
+      - azure_subscription_id: {{ model.migration_target.azure_subscription_id }}
+    outputPath: ../dist/generatedfiles
+    files:
+      - env: ['dev']
+        paths:
+          - <path-to-dev-powershell-script-to-deploy>
+          - <path-to-dev-powershell-invoker-to-deploy>
+          - <path-to-dev-powershell-script-to-teardown>
+          - <path-to-dev-powershell-invoker-to-teardown>
+
+  - template: deploySchema
+    templateType: microsoft.template.powershell
+    resourceName: script-deployschema
+    resourceType: microsoft.scripts.powershell
+    parameters:
+      - azure_primary_region: {{ model.migration_target.azure_primary_region }}
+      - azure_secondary_region: {{ model.migration_target.azure_secondary_region }}
+      - azure_subscription_id: {{ model.migration_target.azure_subscription_id }}
+    outputPath: ../dist/generatedfiles
+    files:
+      - env: ['dev']
+        paths:
+          - <path-to-dev-powershell-script-to-deploy>
+          - <path-to-dev-powershell-invoker-to-deploy>
+          - <path-to-dev-powershell-script-to-teardown>
+          - <path-to-dev-powershell-invoker-to-teardown>
+
+  - template: deployProcessManager
+    templateType: microsoft.template.powershell
+    resourceName: script-deployprocessmanager
+    resourceType: microsoft.scripts.powershell
+    parameters:
+      - azure_primary_region: {{ model.migration_target.azure_primary_region }}
+      - azure_secondary_region: {{ model.migration_target.azure_secondary_region }}
+      - azure_subscription_id: {{ model.migration_target.azure_subscription_id }}
+    outputPath: ../dist/generatedfiles
+    files:
+      - env: ['dev']
+        paths:
+          - <path-to-dev-powershell-script-to-deploy>
+          - <path-to-dev-powershell-invoker-to-deploy>
+          - <path-to-dev-powershell-script-to-teardown>
+          - <path-to-dev-powershell-invoker-to-teardown>

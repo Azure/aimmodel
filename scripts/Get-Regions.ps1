@@ -1,0 +1,1 @@
+az account list-locations --query "[].{DisplayName: displayName, Name: name}" -o json > ../config/regions.json

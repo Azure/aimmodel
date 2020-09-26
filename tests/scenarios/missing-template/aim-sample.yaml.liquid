@@ -1,0 +1,67 @@
+resourceMaps:
+
+  - map: messageBus
+    resources:
+      - messageBusGroup
+      - artifactStore
+      - routingManager
+      - routingSlipRouter
+      - routingStore
+
+  - map: application
+    resources:
+      - applicationGroup
+
+  - map: applicationMessage
+    resources:
+      - applicationMessage
+
+resources:
+
+  - resource: messageBusGroup
+    targets:
+      - target: ['consumption', 'ise']
+        templates:
+          - messageBusAzureResourceGroup
+          - deployMessageBusGroup
+
+  - resource: artifactStore
+    targets:
+      - target: ['consumption', 'ise']
+        templates:
+          - artifactStoreAzureIntegrationAccountBasic
+          - deployArtifactStore
+
+  - resource: routingManager
+    targets:
+      - target: ['consumption', 'ise']
+        templates:
+          - routingManagerAzureApiManagementConsumption
+          - deployRoutingManager
+
+  - resource: routingSlipRouter
+    targets:
+      - target: ['consumption', 'ise']
+        templates:
+          - routingSlipRouterAzureLogicAppConsumption
+          - deployRoutingSlipRouter
+
+  - resource: routingStore
+    targets:
+      - target: ['consumption', 'ise']
+        templates:
+          - routingStoreAzureAppConfiguration
+          - deployRoutingStore
+
+  - resource: applicationGroup
+    targets:
+      - target: ['consumption', 'ise']
+        templates:
+          - applicationAzureResourceGroup
+          - deployApplicationGroup
+
+  - resource: applicationMessage
+    targets:
+      - target: ['consumption', 'ise']
+        templates:
+          - deploySchema

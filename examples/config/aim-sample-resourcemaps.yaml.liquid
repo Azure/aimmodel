@@ -1,0 +1,34 @@
+#
+# A target model is produced by analyzing the source model and adding logical messaging
+# objects that represent the source model artifacts.
+#
+# As part of the analysis stage, each logical messaging object is associated with a resource
+# map key.  This key is used to look up the resources in this configuration file and
+# associated template configuration files and the discovered resources are added to the target model.
+#
+# The configuration files themselves can also be rendered using the Liquid template language.
+#
+
+# A resource map defines a grouping of resources by logical messaging object.  The associated resources
+# are defined in the resources key in this configuration file.
+resourceMaps:
+
+  - map: messageBus
+    resources:
+      - messageBusGroup
+      - artifactStore
+      - routingManager
+      - routingSlipRouter
+      - routingStore
+
+  - map: application
+    resources:
+      - applicationGroup
+
+  - map: applicationMessage
+    resources:
+      - applicationMessage
+
+  - map: processManager
+    resources:
+      - processManager

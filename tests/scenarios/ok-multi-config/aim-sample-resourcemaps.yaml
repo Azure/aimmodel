@@ -1,0 +1,21 @@
+resourceMaps:
+
+  - map: messageBus
+    resources:
+      - messageBusGroup
+      - artifactStore
+      - routingManager
+      - routingSlipRouter
+      - routingStore
+
+  - map: application
+    resources:
+      - applicationGroup
+
+  - map: applicationMessage
+    resources:
+      - applicationMessage
+
+  - map: processManager
+    resources:
+      - processManager

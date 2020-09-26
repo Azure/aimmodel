@@ -1,0 +1,82 @@
+#
+# A target model is produced by analyzing the source model and adding logical messaging
+# objects that represent the source model artifacts.
+#
+# As part of the analysis stage, each logical messaging object is associated with a resource
+# map key.  This key is used to look up the resources in this configuration file and
+# associated template configuration files and the discovered resources are added to the target model.
+#
+# The configuration files themselves can also be rendered using the Liquid template language.
+#
+
+# A resource associates the templates that are used to represent and deploy the resource in Azure
+# keyed by the AIS target environment.  The target environment is an enumeration defined in the model
+# and determines what environment the templates support.
+resources:
+
+  - resource: messageBusGroup
+    targets:
+      - target: ['consumption', 'ise']
+        templates:
+          - messageBusAzureResourceGroup
+          - deployMessageBusGroup
+
+  - resource: artifactStore
+    targets:
+      - target: ['consumption', 'ise']
+        templates:
+          - artifactStoreAzureIntegrationAccountBasic
+          - deployArtifactStore
+
+  - resource: routingManager
+    targets:
+      - target: ['consumption', 'ise']
+        templates:
+          - routingManagerAzureApiManagementConsumption
+          - deployRoutingManager
+
+  - resource: routingSlipRouter
+    targets:
+      - target: ['consumption', 'ise']
+        templates:
+          - routingSlipRouterAzureLogicAppConsumption
+          - deployRoutingSlipRouter
+
+  - resource: routingStore
+    targets:
+      - target: ['consumption', 'ise']
+        templates:
+          - routingStoreAzureAppConfiguration
+          - deployRoutingStore
+
+  - resource: applicationGroup
+    targets:
+      - target: ['consumption', 'ise']
+        templates:
+          - applicationAzureResourceGroup
+          - deployApplicationGroup
+
+  - resource: applicationMessage
+    targets:
+      - target: ['consumption', 'ise']
+        templates:
+          - deploySchema
+
+  - resource: processManager
+    targets:
+      - target: ['consumption', 'ise']
+        templates:
+          - processManagerLogicApp
+          - deployProcessManager
+        snippets:
+          - workflow
+          - parameterApimSubscriptionKey
+          - parameterScenarioStep
+          - channelHttpTrigger
+          - variableCheckpoint
+          - variableConfiguration
+          - activityContainerGetConfiguration
+          - activityContainerCallRoutingSlipRouter
+          - activityContainerPlaceHolder
+          - activityPlaceHolder
+          - activityInvokeWorkflow
