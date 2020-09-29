@@ -1,4 +1,6 @@
-﻿using System;
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+using System;
 using Microsoft.AzureIntegrationMigration.ApplicationModel.Report;
 using Microsoft.AzureIntegrationMigration.ApplicationModel.Source;
 using Microsoft.AzureIntegrationMigration.ApplicationModel.Target;
