@@ -51,8 +51,8 @@ jobs:
         shell: bash
         run: echo ::set-env name=VERSION_NUMBER::$(cat ./version-number.txt)${{ env.VERSION_NUMBER_SUFFIX }}
         
-      - name: Update the nuget config with the build credentials for the private source
-        run: dotnet nuget update source ${{ env.NUGET_SOURCE_NAME }} --username ${{ secrets.NUGET_PACKAGE_REPO_API_USER }} --password ${{ secrets.NUGET_PACKAGE_REPO_API_SECRET }}
+      - name: Update the nuget config with the credentials for the GitHub Package Repository
+        run: dotnet nuget update source ${{ env.NUGET_SOURCE_NAME }} --username ${{ github.actor }} --password ${{ secrets.GITHUB_TOKEN }}
 
       - name: Restore project dependencies
         run: dotnet restore
