@@ -15,7 +15,7 @@ on:
     types: [published]
 
 env:
-  DOTNET_VERSION: '3.1.200'
+  DOTNET_VERSION: '5.0.x'
   OUTPUT_DIR: 'dist'
   BUILD_TYPE: 'Release'
   NUGET_SOURCE_NAME: 'AzureIntegrationMigration'
