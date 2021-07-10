@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 using System;
 using System.Collections.Generic;
@@ -225,7 +225,7 @@ namespace Microsoft.AzureIntegrationMigration.ApplicationModel.Generator
             // Tags
             if (templateNode.Children.ContainsKey("tags"))
             {
-                var templateTags = (YamlSequenceNode)templateNode.Children["tags"];
+                var templateTags = templateNode.Children["tags"] as YamlSequenceNode;
                 if (templateTags != null)
                 {
                     foreach (var tag in templateTags)
@@ -239,7 +239,7 @@ namespace Microsoft.AzureIntegrationMigration.ApplicationModel.Generator
             // Parameters
             if (templateNode.Children.ContainsKey("parameters"))
             {
-                var templateParams = (YamlSequenceNode)templateNode.Children["parameters"];
+                var templateParams = templateNode.Children["parameters"] as YamlSequenceNode;
                 if (templateParams != null)
                 {
                     foreach (var param in templateParams)
@@ -253,7 +253,7 @@ namespace Microsoft.AzureIntegrationMigration.ApplicationModel.Generator
             // Files
             if (templateNode.Children.ContainsKey("files"))
             {
-                var templateFiles = (YamlSequenceNode)templateNode.Children["files"];
+                var templateFiles = templateNode.Children["files"] as YamlSequenceNode;
                 if (templateFiles != null)
                 {
                     _logger.LogTrace(TraceMessages.FilteringTemplatesByEnvironment, model.MigrationTarget.DeploymentEnvironment, templateKey.Value);
@@ -263,18 +263,23 @@ namespace Microsoft.AzureIntegrationMigration.ApplicationModel.Generator
                         var templateFile = (YamlMappingNode)templateFileNode;
 
                         // Filter by deployment environment
-                        var envNameNode = (YamlSequenceNode)templateFile.Children["env"];
-                        var envNames = envNameNode.Select(t => ((YamlScalarNode)t).Value.ToUpperInvariant());
-                        if (envNames.Contains(model.MigrationTarget.DeploymentEnvironment.ToUpperInvariant()))
+                        var envNameNode = templateFile.Children["env"] as YamlSequenceNode;
+                        if (envNameNode != null)
                         {
-                            _logger.LogTrace(TraceMessages.FoundFilesForEnvironment, model.MigrationTarget.DeploymentEnvironment, templateKey.Value);
-
-                            // Get paths
-                            var pathsList = (YamlSequenceNode)templateFile.Children["paths"];
-
-                            foreach (var path in pathsList)
+                            var envNames = envNameNode.Select(t => ((YamlScalarNode)t).Value.ToUpperInvariant());
+                            if (envNames.Contains(model.MigrationTarget.DeploymentEnvironment.ToUpperInvariant()))
                             {
-                                targetResource.ResourceTemplateFiles.Add(((YamlScalarNode)path).Value);
+                                _logger.LogTrace(TraceMessages.FoundFilesForEnvironment, model.MigrationTarget.DeploymentEnvironment, templateKey.Value);
+
+                                // Get paths - note that if there are no paths defined, then this node is a YamlScalarNode.
+                                var pathsList = templateFile.Children["paths"] as YamlSequenceNode;
+                                if (pathsList != null)
+                                {
+                                    foreach (var path in pathsList)
+                                    {
+                                        targetResource.ResourceTemplateFiles.Add(((YamlScalarNode)path).Value);
+                                    }
+                                }
                             }
                         }
                     }
