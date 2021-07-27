@@ -19,6 +19,16 @@ namespace Microsoft.AzureIntegrationMigration.ApplicationModel.Target
         /// <summary>
         /// The target is the single-tenant Logic Apps Standard environment.
         /// </summary>
-        Standard = 1
+        Standard = 1,
+
+        /// <summary>
+        /// The target is the lite-version of the multi-tenant Logic Apps Consumption environment.
+        /// </summary>
+        ConsumptionLite = 2,
+
+        /// <summary>
+        /// The target is the lite-version of the single-tenant Logic Apps Standard environment.
+        /// </summary>
+        StandardLite = 3
     }
 }

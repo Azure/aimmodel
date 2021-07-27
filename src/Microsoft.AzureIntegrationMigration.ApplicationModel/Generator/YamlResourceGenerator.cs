@@ -138,18 +138,22 @@ namespace Microsoft.AzureIntegrationMigration.ApplicationModel.Generator
                                         _logger.LogTrace(TraceMessages.FoundTemplatesForTarget, model.MigrationTarget.TargetEnvironment, resourceKey.Value);
 
                                         // Get templates
-                                        var templateKeyList = (YamlSequenceNode)target.Children["templates"];
+                                        var templateKeyList = target.Children["templates"] as YamlSequenceNode;
 
-                                        foreach (var templateKeyNode in templateKeyList)
+                                        // Check if we have any templates
+                                        if (templateKeyList != null)
                                         {
-                                            var templateKey = (YamlScalarNode)templateKeyNode;
-
-                                            var templateNode = FindTemplate(config, templateKey.Value);
-                                            if (templateNode != null)
+                                            foreach (var templateKeyNode in templateKeyList)
                                             {
-                                                // Create target resource
-                                                var targetResourceTemplate = CreateTargetResourceTemplate(model, templateKey, templateNode);
-                                                messagingObject.Resources.Add(targetResourceTemplate);
+                                                var templateKey = (YamlScalarNode)templateKeyNode;
+
+                                                var templateNode = FindTemplate(config, templateKey.Value);
+                                                if (templateNode != null)
+                                                {
+                                                    // Create target resource
+                                                    var targetResourceTemplate = CreateTargetResourceTemplate(model, templateKey, templateNode);
+                                                    messagingObject.Resources.Add(targetResourceTemplate);
+                                                }
                                             }
                                         }
                                     }
