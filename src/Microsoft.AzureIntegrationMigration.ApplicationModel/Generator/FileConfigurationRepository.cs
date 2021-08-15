@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 using System;
 using System.Collections.Generic;
@@ -71,6 +71,7 @@ namespace Microsoft.AzureIntegrationMigration.ApplicationModel.Generator
                 {
                     foreach (var file in files)
                     {
+                        _logger.LogDebug(TraceMessages.LoadingConfigurationFile, file.Name);
                         using (var reader = new StreamReader(file.FullName))
                         {
                             var yaml = new YamlStream();
