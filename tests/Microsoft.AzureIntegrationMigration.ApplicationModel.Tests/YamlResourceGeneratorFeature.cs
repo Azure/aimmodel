@@ -234,7 +234,7 @@ namespace Microsoft.AzureIntegrationMigration.ApplicationModel.Tests
                 .x(() =>
                 {
                     model = _model;
-                    model.MigrationTarget.TargetEnvironment = AzureIntegrationServicesTargetEnvironment.Standard;
+                    model.MigrationTarget.TargetEnvironment = AzureIntegrationServicesTargetEnvironment.Consumption;
                 });
 
             "And configuration"
