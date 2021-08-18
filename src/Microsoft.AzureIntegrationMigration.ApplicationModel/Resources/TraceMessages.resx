@@ -150,6 +150,9 @@
   <data name="FoundTemplatesForTarget" xml:space="preserve">
     <value>Found templates for AIS target environment {AzureIntegrationServicesTarget} for resource {ResourceKey}.</value>
   </data>
+  <data name="LoadingConfigurationFile" xml:space="preserve">
+    <value>Loading configuration file {file}.</value>
+  </data>
   <data name="LoadingConfigurationFiles" xml:space="preserve">
     <value>Loading configuration files from {ConfigurationDirectory}.</value>
   </data>

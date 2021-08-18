@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 using System;
 using System.Collections.Generic;
@@ -222,7 +222,7 @@ namespace Microsoft.AzureIntegrationMigration.ApplicationModel.Tests
                 TemplateType = "microsoft.template.arm",
                 TemplateKey = "messageAgentResourceKey",
                 ResourceName = "messageAgent",
-                ResourceType = "microsoft.workflows.azurelogicapp"
+                ResourceType = "microsoft.workflows.azurelogicapp.consumption"
             });
 
             var ftpReceive = systemApp.Endpoints.Where(e => e.Key == "ContosoMessageBus:System:FtpReceive").Single();
@@ -231,7 +231,7 @@ namespace Microsoft.AzureIntegrationMigration.ApplicationModel.Tests
                 TemplateType = "microsoft.template.arm",
                 TemplateKey = "ftpReceiveKey",
                 ResourceName = "ftpReceive",
-                ResourceType = "microsoft.workflows.azurelogicapp"
+                ResourceType = "microsoft.workflows.azurelogicapp.consumption"
             });
 
             var app = messageBus.Applications.Where(a => a.Name == "AppA").Single();
@@ -242,7 +242,7 @@ namespace Microsoft.AzureIntegrationMigration.ApplicationModel.Tests
                 TemplateType = "microsoft.template.arm",
                 TemplateKey = "purchaseOrderFlatFileKey",
                 ResourceName = "purchaseOrderFlatFile",
-                ResourceType = "microsoft.workflows.azurelogicapp"
+                ResourceType = "microsoft.workflows.azurelogicapp.consumption"
             });
 
             var processManager = app.Intermediaries.Where(i => i.Key == "ContosoMessageBus:AppA:FtpTransformWorkflow").Single();
@@ -251,14 +251,14 @@ namespace Microsoft.AzureIntegrationMigration.ApplicationModel.Tests
                 TemplateType = "microsoft.template.arm",
                 TemplateKey = "processManagerResourceKey",
                 ResourceName = "processManager",
-                ResourceType = "microsoft.workflows.azurelogicapp"
+                ResourceType = "microsoft.workflows.azurelogicapp.consumption"
             });
             processManager.Snippets.Add(new TargetResourceSnippet()
             {
                 SnippetKey = "workflow",
                 SnippetType = "microsoft.snippet.json",
                 ResourceName = "workflow-dev",
-                ResourceType = "microsoft.workflow.definition.azurelogicapp"
+                ResourceType = "microsoft.workflows.definition.azurelogicapp.consumption"
             });
 
             return model;

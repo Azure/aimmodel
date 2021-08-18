@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 using System;
 using System.Collections.Generic;
@@ -234,7 +234,7 @@ namespace Microsoft.AzureIntegrationMigration.ApplicationModel.Tests
                 .x(() =>
                 {
                     model = _model;
-                    model.MigrationTarget.TargetEnvironment = AzureIntegrationServicesTargetEnvironment.Ise;
+                    model.MigrationTarget.TargetEnvironment = AzureIntegrationServicesTargetEnvironment.Consumption;
                 });
 
             "And configuration"
